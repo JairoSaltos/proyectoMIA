@@ -1,0 +1,13 @@
+caso_id,grupo,mensaje,estado,categoria,score_estimado,requiere_revision,motivo,resultado_control
+1,entrada_vacia,"",entrada_invalida,,,No,"No se ejecuta el modelo",Cumple
+2,entrada_vacia,"!!!",entrada_invalida,,,No,"No se ejecuta el modelo",Cumple
+3,fuera_vocabulario,"pizza",informacion_insuficiente,,,Sí,"ningún término reconocido por el vectorizador",Cumple
+4,regresion,"quiero agendar una cita para mañana",clasificado,agendar_cita,0.5652,No,"",Cumple
+5,regresion,"cuánto cuesta una consulta",clasificado,costos_cotizacion,0.5483,No,"",Cumple
+6,baja_certeza,"dónde queda la clínica y cuál es el horario",clasificado,costos_cotizacion,0.2053,Sí,"score estimado menor a 35%",Cumple
+7,regresion,"quiero cancelar la cita",clasificado,reprogramar_cancelar_cita,0.6012,No,"",Cumple
+8,contenido_sensible,"mi gato está vomitando sangre y cuánto cuesta la consulta",clasificado,costos_cotizacion,0.3969,Sí,"términos sensibles: sangrado",Cumple
+9,contenido_sensible,"mi perro fue atropellado",clasificado,otros_revisar,0.2156,Sí,"score estimado menor a 35%; términos sensibles: accidente",Cumple
+10,contenido_sensible,"mi gato no puede respirar",clasificado,otros_revisar,0.1411,Sí,"score estimado menor a 35%; términos sensibles: dificultad respiratoria",Cumple
+11,categoria_clinica,"necesito los resultados del examen",clasificado,resultados_examenes,0.8455,Sí,"contenido clasificado en una categoría clínica",Cumple
+12,baja_certeza,"hola",clasificado,reprogramar_cancelar_cita,0.2561,Sí,"score estimado menor a 35%",Cumple

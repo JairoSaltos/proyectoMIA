@@ -1,17 +1,20 @@
 # Cat Clinic UIO — MVP con controles mínimos de seguridad
 
-Esta es una copia independiente de la aplicación original. Conserva sin cambios
-el modelo de Regresión Logística y el vectorizador TF-IDF, pero agrega controles
-antes y después de la predicción.
+Esta aplicación independiente conserva sin cambios el modelo de Regresión
+Logística y el vectorizador TF-IDF, y agrega controles antes y después de la
+predicción.
 
-## Cambios implementados
+## Controles implementados
 
 - Rechazo de entradas vacías o compuestas solo por símbolos.
 - Rechazo de mensajes sin términos reconocidos por TF-IDF.
 - Revisión humana cuando el score estimado es menor a 35 %.
+- Resultado principal `Clasificación no concluyente` ante score bajo; la
+  categoría técnica se conserva en un desplegable de auditoría.
 - Revisión humana para categorías clínicas.
 - Alerta conservadora ante términos clínicos sensibles.
-- Historial con indicador y motivo de revisión.
+- Historial con indicador y motivo de revisión; los scores bajos se registran
+  como `No concluyente`.
 - Etiqueta `score estimado (no calibrado)` en lugar de `confianza`.
 - Aviso visible de que el prototipo no diagnostica ni asigna prioridad clínica.
 - Versión de scikit-learn fijada en 1.6.1, correspondiente a los artefactos.
@@ -21,6 +24,8 @@ una escala clínica. La veterinaria debe revisar la lista de patrones de
 `safety.py` antes de considerar un uso distinto al académico.
 
 ## Ejecución local
+
+Desde esta carpeta:
 
 ```bash
 python -m venv .venv
@@ -38,19 +43,24 @@ python -m unittest discover -s tests -v
 ```
 
 Las pruebas verifican entradas vacías, texto fuera del vocabulario, score bajo,
-categorías clínicas, términos sensibles y equivalencia de las predicciones
-válidas con la lógica original.
+la presentación no concluyente, categorías clínicas, términos sensibles, inicio
+de la interfaz y equivalencia de las predicciones válidas con la lógica original.
 
 ## Publicación independiente
 
-1. Crear un repositorio nuevo, por ejemplo `catclinic-mvp-seguro`.
-2. Subir únicamente el contenido de esta carpeta.
-3. En Streamlit Community Cloud, crear una app nueva apuntando a `app.py`.
-4. No cambiar la aplicación ni el repositorio de la versión de la compañera.
-5. Ejecutar la prueba manual indicada en `VALIDACION.md` después del despliegue.
+La aplicación se publica en Streamlit Community Cloud con estos datos:
+
+- URL: <https://catclinic-uio-mvp-seguro-js.streamlit.app>
+- Repositorio: `JairoSaltos/proyectoMIA`
+- Rama: `main`
+- Main file path: `CatClinic_MVP_Seguro/app.py`
+- Python: `3.12`
+
+Después de cada publicación se deben repetir los casos manuales indicados en
+`VALIDACION.md`.
 
 ## Alcance
 
-El sistema clasifica intención y muestra un score estimado. Las alertas agregadas
-solo derivan casos a una persona. No asignan prioridad veterinaria, no diagnostican
-y no generan tratamientos o respuestas clínicas.
+El sistema clasifica intención y muestra un score estimado. Las alertas
+agregadas solo derivan casos a una persona. No asignan prioridad veterinaria,
+no diagnostican y no generan tratamientos ni respuestas clínicas.

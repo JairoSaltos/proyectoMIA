@@ -5,7 +5,7 @@ import joblib
 import pandas as pd
 import streamlit as st
 
-from safety import clasificar_mensaje
+from safety import MIN_SCORE_REVISION, clasificar_mensaje
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -24,13 +24,24 @@ def cargar_modelo():
     return modelo, vectorizador
 
 
+def es_clasificacion_no_concluyente(resultado):
+    return resultado.estado == "clasificado" and (
+        resultado.score is None or resultado.score < MIN_SCORE_REVISION
+    )
+
+
 def guardar_en_historial(mensaje, resultado):
+    categoria_visible = (
+        "No concluyente"
+        if es_clasificacion_no_concluyente(resultado)
+        else resultado.categoria or "Sin clasificación"
+    )
     st.session_state.historial.insert(
         0,
         {
             "Hora": datetime.now().strftime("%H:%M:%S"),
             "Mensaje": mensaje,
-            "Categoría": resultado.categoria or "Sin clasificación",
+            "Categoría": categoria_visible,
             "Score estimado (%)": (
                 f"{resultado.score * 100:.1f}" if resultado.score is not None else "N/A"
             ),
@@ -38,6 +49,24 @@ def guardar_en_historial(mensaje, resultado):
             "Motivo": "; ".join(resultado.motivos_revision) or "—",
         },
     )
+
+
+def crear_tabla_scores(resultado):
+    if not resultado.scores_por_categoria:
+        return None
+
+    tabla_scores = pd.DataFrame(
+        {
+            "Categoría": resultado.scores_por_categoria.keys(),
+            "Distribución estimada (%)": [
+                valor * 100 for valor in resultado.scores_por_categoria.values()
+            ],
+        }
+    )
+    tabla_scores["Distribución estimada (%)"] = tabla_scores[
+        "Distribución estimada (%)"
+    ].round(2)
+    return tabla_scores.sort_values("Distribución estimada (%)", ascending=False)
 
 
 def mostrar_resultado(resultado):
@@ -55,36 +84,48 @@ def mostrar_resultado(resultado):
     score_texto = (
         f"{resultado.score * 100:.1f}%" if resultado.score is not None else "No disponible"
     )
-    st.info(
-        f"**Categoría detectada:** {resultado.categoria}  \n"
-        f"**Score estimado (no calibrado):** {score_texto}"
-    )
+    motivos = "; ".join(resultado.motivos_revision)
+    tabla_scores = crear_tabla_scores(resultado)
+
+    if es_clasificacion_no_concluyente(resultado):
+        st.warning(
+            "⚠️ **Clasificación no concluyente.** El modelo no obtuvo evidencia "
+            "suficiente para mostrar una categoría como resultado principal.  \n\n"
+            "**Revisión humana requerida antes de responder.**  \n"
+            f"Motivo: {motivos}."
+        )
+
+        with st.expander("Ver salida técnica del modelo"):
+            st.caption(
+                "Información para auditoría académica; no debe usarse como una "
+                "clasificación confirmada."
+            )
+            st.markdown(
+                f"**Categoría técnica estimada:** {resultado.categoria}  \n"
+                f"**Score estimado (no calibrado):** {score_texto}"
+            )
+            if tabla_scores is not None:
+                st.dataframe(tabla_scores, hide_index=True, width="stretch")
+        return
 
     if resultado.requiere_revision:
         st.warning(
             "⚠️ **Revisión humana requerida antes de responder.**  \n"
             + "Motivo: "
-            + "; ".join(resultado.motivos_revision)
+            + motivos
             + "."
         )
+        etiqueta_categoria = "Categoría preliminar"
     else:
         st.success("No se activaron alertas automáticas de revisión.")
+        etiqueta_categoria = "Categoría detectada"
 
-    if resultado.scores_por_categoria:
-        tabla_scores = pd.DataFrame(
-            {
-                "Categoría": resultado.scores_por_categoria.keys(),
-                "Distribución estimada (%)": [
-                    valor * 100 for valor in resultado.scores_por_categoria.values()
-                ],
-            }
-        )
-        tabla_scores["Distribución estimada (%)"] = tabla_scores[
-            "Distribución estimada (%)"
-        ].round(2)
-        tabla_scores = tabla_scores.sort_values(
-            "Distribución estimada (%)", ascending=False
-        )
+    st.info(
+        f"**{etiqueta_categoria}:** {resultado.categoria}  \n"
+        f"**Score estimado (no calibrado):** {score_texto}"
+    )
+
+    if tabla_scores is not None:
         with st.expander("Ver distribución estimada por categoría"):
             st.dataframe(tabla_scores, hide_index=True, width="stretch")
 

@@ -41,6 +41,23 @@ class AppIntegrationTests(unittest.TestCase):
         self.assertTrue(any("Revisión humana requerida" in mensaje for mensaje in mensajes))
         self.assertTrue(any("sangrado" in mensaje for mensaje in mensajes))
 
+    def test_score_bajo_se_muestra_como_no_concluyente(self):
+        app = self.nueva_app()
+        app.text_area[0].set_value("como se come una pizza")
+        app.button[0].click().run()
+
+        mensajes = [elemento.value for elemento in app.warning]
+        expansores = [elemento.label for elemento in app.expander]
+
+        self.assertTrue(
+            any("Clasificación no concluyente" in mensaje for mensaje in mensajes)
+        )
+        self.assertTrue(
+            any("Revisión humana requerida" in mensaje for mensaje in mensajes)
+        )
+        self.assertEqual(len(app.info), 0)
+        self.assertIn("Ver salida técnica del modelo", expansores)
+
 
 if __name__ == "__main__":
     unittest.main()

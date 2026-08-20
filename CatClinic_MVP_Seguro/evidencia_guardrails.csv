@@ -11,3 +11,4 @@ caso_id,grupo,mensaje,estado,categoria,score_estimado,requiere_revision,motivo,r
 10,contenido_sensible,"mi gato no puede respirar",clasificado,otros_revisar,0.1411,Sí,"score estimado menor a 35%; términos sensibles: dificultad respiratoria",Cumple
 11,categoria_clinica,"necesito los resultados del examen",clasificado,resultados_examenes,0.8455,Sí,"contenido clasificado en una categoría clínica",Cumple
 12,baja_certeza,"hola",clasificado,reprogramar_cancelar_cita,0.2561,Sí,"score estimado menor a 35%",Cumple
+13,fuera_dominio,"como se come una pizza",clasificado,triaje_clinico,0.208381,Sí,"score estimado menor a 35%; contenido clasificado en una categoría clínica",Cumple

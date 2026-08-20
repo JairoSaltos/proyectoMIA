@@ -1,11 +1,12 @@
 # Evidencia de validación — controles mínimos de seguridad
 
-Fecha de preparación: 2026-08-19
+Fecha de preparación: 2026-08-20
 
 ## Resultado de ejecución
 
-- Pruebas automatizadas aprobadas: **10 de 10**.
+- Pruebas automatizadas aprobadas: **11 de 11**.
 - Inicio de Streamlit y endpoint local de salud: **correctos**.
+- Casos del CSV de guardrails reproducidos: **13 de 13**.
 - Predicciones válidas comparadas con la lógica original: **5 de 5 idénticas**.
 - Modelo y vectorizador: **idénticos bit a bit a los adjuntos originales**.
 
@@ -29,9 +30,36 @@ Las suites incluidas en `tests/test_safety.py` y `tests/test_app.py` comprueban:
 7. Inicio de la aplicación Streamlit sin excepciones.
 8. Visualización en la interfaz de las alertas de entrada vacía, texto fuera de
    vocabulario y contenido sensible.
+9. Presentación de los scores menores a 35 % como `Clasificación no concluyente`,
+   sin mostrar una categoría como resultado principal.
+10. Conservación de la salida técnica de baja certeza dentro de un desplegable
+    de auditoría.
 
 El modelo y el vectorizador se copiaron sin modificaciones. Los controles están
 implementados en la capa de aplicación.
+
+## Despliegue independiente
+
+- URL: <https://catclinic-uio-mvp-seguro-js.streamlit.app>
+- Repositorio: `JairoSaltos/proyectoMIA`
+- Rama: `main`
+- Punto de entrada: `CatClinic_MVP_Seguro/app.py`
+- Commit publicado: `e2e29ef7090136f4c2d31c13c2db8f2f358a089b`
+- Pull request: `#2`
+- Entorno validado localmente: Python 3.12, Streamlit 1.62.0 y
+  scikit-learn 1.6.1.
+- Salud en producción después de la fusión: `GET /healthz` respondió HTTP 200
+  con `{"status":"ok"}` el 2026-08-20.
+
+La aplicación es privada. Una solicitud sin sesión autenticada redirige al
+inicio de sesión de Streamlit; este comportamiento es esperado y no constituye
+un error de despliegue.
+
+La validación visual autenticada se completó el 2026-08-20 a las 20:32:11,
+según la hora mostrada en el historial de la aplicación. Para la entrada
+`como se come una pizza`, la interfaz mostró primero `Clasificación no
+concluyente`, mantuvo cerrada la salida técnica y registró `No concluyente` en
+el historial con score 20,8 %. El caso cumplió el comportamiento esperado.
 
 ## Prueba manual posterior al despliegue
 
@@ -39,12 +67,21 @@ implementados en la capa de aplicación.
 |---|---|---|
 | Vacío | Espacios o símbolos | No clasifica y solicita texto válido |
 | Fuera de vocabulario | `pizza` | No clasifica y solicita más contexto |
-| Baja certeza | Mensaje que obtenga score menor a 35 % | Clasifica y exige revisión humana |
-| Contenido sensible | Mensaje de prueba con la palabra `sangre` | Exige revisión humana, independientemente de la categoría |
+| Baja certeza | `como se come una pizza` | Muestra primero `Clasificación no concluyente` y exige revisión humana; la categoría técnica solo aparece en el desplegable |
+| Contenido sensible | Mensaje de prueba con la palabra `sangre` | Muestra primero la revisión humana, independientemente de la categoría |
 | Mensaje administrativo | Solicitud clara de horario o cita | Muestra categoría y score estimado |
 
 Esta prueba manual debe repetirse en la nueva URL porque el despliegue y sus
 dependencias constituyen un entorno diferente al local.
 
-El archivo `evidencia_guardrails.csv` conserva los resultados de doce mensajes
+El caso de baja certeza fue repetido y aprobado en la URL desplegada. Los demás
+casos permanecen cubiertos por las 11 pruebas automatizadas y deben repetirse
+antes de cualquier prueba piloto con personal de recepción.
+
+El caso fuera de dominio `como se come una pizza` obtuvo técnicamente
+`triaje_clinico` con score 0,208381. El guardrail evitó presentarlo como una
+clasificación confirmada: la salida principal fue `Clasificación no concluyente`
+y la categoría se conservó únicamente para auditoría.
+
+El archivo `evidencia_guardrails.csv` conserva los resultados de trece mensajes
 representativos utilizados durante la verificación local.

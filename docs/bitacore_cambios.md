@@ -1,30 +1,44 @@
-# Bitácora de Cambios del Proyecto
+# Bitácora de cambios del proyecto
 
-## Semana 1 — Problem framing y actores
+Esta bitácora usa únicamente evidencia observable en el historial Git y en los
+pull requests del repositorio. Cuando el historial no permite identificar una
+responsabilidad individual, se atribuye el trabajo al **equipo del proyecto**.
 
-**Fecha:** 2026-XX-XX  
-**Responsable principal:** Miguel  
-**Apoyo:** Jairo  
+## Historial verificable
 
-### Actividades realizadas
-- Se revisó el problema operativo de recepción.
-- Se actualizó el mapa de actores.
-- Se identificaron necesidades iniciales de clasificación y priorización.
+| Fecha | Evidencia Git | Cambio registrado |
+|---|---|---|
+| 2026-06-11 | Commits `2733afe`, `0bf41a5`, `7c15985` y PR [#1](https://github.com/JairoSaltos/proyectoMIA/pull/1) | Creación inicial de la bitácora y archivos de arquitectura y validación; actualización inicial del README. |
+| 2026-06-12 | Commits `b7b173f`, `5b295a3`, `e9563f6` y `2526893` | Creación y actualización de README y bitácora. El historial disponible no aporta suficiente detalle para ampliar la atribución. |
+| 2026-08-20 | Commit `5e0e681` | Incorporación mediante carga de los archivos que conforman el MVP seguro actual. |
+| 2026-08-20 | PR [#2](https://github.com/JairoSaltos/proyectoMIA/pull/2), commit `e2e29ef` | Presentación de resultados de score bajo como no concluyentes, salida técnica de auditoría, prueba de regresión fuera de dominio y actualización documental. |
+| 2026-08-20 | PR [#3](https://github.com/JairoSaltos/proyectoMIA/pull/3), commit `b3c0539` | Registro de 11/11 pruebas automatizadas, 13/13 casos de guardrails y validación autenticada de Streamlit. |
 
-### Cambios realizados en el repositorio
-- Se creó la estructura inicial del repositorio.
-- Se agregó el archivo README.md.
-- Se agregó la carpeta docs/.
+## Consolidación S10 — 2026-08-25
 
-### Decisiones tomadas
-- El sistema será un prototipo académico.
-- No se enviarán respuestas automáticas a tutores.
-- La respuesta final será revisada por recepción.
+**Responsable registrado:** equipo del proyecto.
 
-### Evidencia
-- Commit: docs: add initial project documentation
-- Archivo actualizado: docs/decisiones_tecnicas.md
+**Rama:** `codex/s10-documentation-hardening`.
 
-### Pendientes
-- Levantar flujo AS-IS.
-- Definir categorías preliminares de mensajes.
+**Commit base:** `b3c0539991797fecc3fc779496ccc8017b39a7fa`.
+
+### Alcance
+
+- completar README, arquitectura, datos y estado de validación con usuarios;
+- documentar modelo, artefactos, hashes, resultados y trazabilidad pendiente;
+- registrar la demo pública confirmada por el propietario;
+- proponer la versión 1.0.0 sin publicar un tag ni un release;
+- conservar sin cambios la lógica, las pruebas y los artefactos `.pkl`.
+
+### Evidencia de entrada
+
+- 11 de 11 pruebas automatizadas aprobadas;
+- 13 de 13 casos de guardrails registrados;
+- hashes SHA-256 del modelo y vectorizador coincidentes con la referencia;
+- métricas identificadas como resultados reportados en el documento final, no
+  como resultados reproducidos desde el repositorio.
+
+**Pull request:** [#4 — S10: consolidate repository documentation and evidence](https://github.com/JairoSaltos/proyectoMIA/pull/4).
+
+El pull request permanece abierto para revisión y no debe fusionarse sin
+aprobación del propietario.

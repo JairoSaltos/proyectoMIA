@@ -51,9 +51,17 @@ implementados en la capa de aplicación.
 - Salud en producción después de la fusión: `GET /healthz` respondió HTTP 200
   con `{"status":"ok"}` el 2026-08-20.
 
-La aplicación es privada. Una solicitud sin sesión autenticada redirige al
-inicio de sesión de Streamlit; este comportamiento es esperado y no constituye
-un error de despliegue.
+### Estado de acceso
+
+La verificación del 2026-08-20 se realizó con una sesión autenticada. En ese
+momento, una solicitud sin sesión redirigía al inicio de sesión de Streamlit.
+Este dato se conserva como contexto histórico de aquella validación.
+
+Por confirmación del propietario el 2026-08-24, la aplicación está actualmente
+disponible de forma pública en
+<https://catclinic-uio-mvp-seguro-js.streamlit.app>. Esta actualización
+documental no equivale a una nueva validación funcional en producción ni
+modifica la configuración, la URL o los secretos del despliegue.
 
 La validación visual autenticada se completó el 2026-08-20 a las 20:32:11,
 según la hora mostrada en el historial de la aplicación. Para la entrada
@@ -74,9 +82,10 @@ el historial con score 20,8 %. El caso cumplió el comportamiento esperado.
 Esta prueba manual debe repetirse en la nueva URL porque el despliegue y sus
 dependencias constituyen un entorno diferente al local.
 
-El caso de baja certeza fue repetido y aprobado en la URL desplegada. Los demás
-casos permanecen cubiertos por las 11 pruebas automatizadas y deben repetirse
-antes de cualquier prueba piloto con personal de recepción.
+El caso de baja certeza fue repetido y aprobado en la URL desplegada durante la
+validación autenticada del 2026-08-20. Los demás casos permanecen cubiertos por
+las 11 pruebas automatizadas y deben repetirse en la demo pública antes de
+cualquier prueba piloto con personal de recepción.
 
 El caso fuera de dominio `como se come una pizza` obtuvo técnicamente
 `triaje_clinico` con score 0,208381. El guardrail evitó presentarlo como una

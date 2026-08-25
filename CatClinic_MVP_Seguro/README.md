@@ -1,8 +1,9 @@
 # Cat Clinic UIO — MVP con controles mínimos de seguridad
 
-Esta aplicación independiente conserva sin cambios el modelo de Regresión
-Logística y el vectorizador TF-IDF, y agrega controles antes y después de la
-predicción.
+Aplicación Streamlit que conserva el modelo de Regresión Logística y el
+vectorizador TF-IDF versionados, y aplica controles antes y después de la
+predicción. La interfaz apoya la clasificación de intención; toda interpretación
+y acción posterior corresponde a una persona.
 
 ## Controles implementados
 
@@ -13,15 +14,19 @@ predicción.
   categoría técnica se conserva en un desplegable de auditoría.
 - Revisión humana para categorías clínicas.
 - Alerta conservadora ante términos clínicos sensibles.
-- Historial con indicador y motivo de revisión; los scores bajos se registran
-  como `No concluyente`.
-- Etiqueta `score estimado (no calibrado)` en lugar de `confianza`.
+- Historial temporal con indicador y motivo de revisión.
+- Etiqueta `score estimado (no calibrado)` en lugar de confianza.
 - Aviso visible de que el prototipo no diagnostica ni asigna prioridad clínica.
-- Versión de scikit-learn fijada en 1.6.1, correspondiente a los artefactos.
 
-El umbral y los patrones sensibles son controles operativos del prototipo, no
-una escala clínica. La veterinaria debe revisar la lista de patrones de
-`safety.py` antes de considerar un uso distinto al académico.
+El umbral y los patrones de `safety.py` son controles operativos, no una escala
+clínica. Deben revisarse con el equipo veterinario antes de cualquier piloto.
+
+## Requisitos
+
+- Python 3.11 o 3.12.
+- Dependencias de `requirements.txt`: Streamlit 1.62.0, scikit-learn 1.6.1,
+  NumPy, Joblib y pandas.
+- `modelo_clasificador.pkl` y `tfidf_vectorizer.pkl` en esta carpeta.
 
 ## Ejecución local
 
@@ -30,11 +35,12 @@ Desde esta carpeta:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 streamlit run app.py
 ```
 
-En Windows, la activación del entorno es `.venv\Scripts\activate`.
+En Windows, la activación es `.venv\Scripts\activate`.
 
 ## Pruebas
 
@@ -42,25 +48,30 @@ En Windows, la activación del entorno es `.venv\Scripts\activate`.
 python -m unittest discover -s tests -v
 ```
 
-Las pruebas verifican entradas vacías, texto fuera del vocabulario, score bajo,
-la presentación no concluyente, categorías clínicas, términos sensibles, inicio
-de la interfaz y equivalencia de las predicciones válidas con la lógica original.
+Resultado de referencia: 11 de 11 pruebas aprobadas. Las pruebas cubren entrada
+inválida, texto fuera de vocabulario, score bajo, presentación no concluyente,
+categorías clínicas, términos sensibles, inicio de la interfaz y equivalencia
+de predicciones válidas con la lógica original.
 
-## Publicación independiente
-
-La aplicación se publica en Streamlit Community Cloud con estos datos:
+## Demo pública
 
 - URL: <https://catclinic-uio-mvp-seguro-js.streamlit.app>
 - Repositorio: `JairoSaltos/proyectoMIA`
-- Rama: `main`
-- Main file path: `CatClinic_MVP_Seguro/app.py`
-- Python: `3.12`
+- Rama desplegada: `main`
+- Punto de entrada: `CatClinic_MVP_Seguro/app.py`
+- Entorno registrado: Python 3.12
 
-Después de cada publicación se deben repetir los casos manuales indicados en
-`VALIDACION.md`.
+La demo es pública. Su accesibilidad no implica que el repositorio tenga la
+misma visibilidad. Después de cada publicación deben repetirse los casos
+manuales descritos en [`VALIDACION.md`](VALIDACION.md).
 
 ## Alcance
 
-El sistema clasifica intención y muestra un score estimado. Las alertas
-agregadas solo derivan casos a una persona. No asignan prioridad veterinaria,
-no diagnostican y no generan tratamientos ni respuestas clínicas.
+El sistema clasifica intención y muestra un score estimado no calibrado. No
+analiza conversaciones completas, no asigna prioridad veterinaria, no
+diagnostica, no prescribe, no recomienda tratamientos y no genera respuestas
+automáticas.
+
+Para la visión completa del repositorio, consulte el [README principal](../README.md),
+la [arquitectura](../docs/arquitectura.md) y la
+[tarjeta del modelo](../MODEL_CARD.md).

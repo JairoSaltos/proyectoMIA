@@ -38,5 +38,7 @@ responsabilidad individual, se atribuye el trabajo al **equipo del proyecto**.
 - métricas identificadas como resultados reportados en el documento final, no
   como resultados reproducidos desde el repositorio.
 
-El enlace al pull request S10 se añadirá en esta sección inmediatamente después
-de abrirlo, antes de solicitar su aprobación.
+**Pull request:** [#4 — S10: consolidate repository documentation and evidence](https://github.com/JairoSaltos/proyectoMIA/pull/4).
+
+El pull request permanece abierto para revisión y no debe fusionarse sin
+aprobación del propietario.
